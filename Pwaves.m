@@ -30,7 +30,7 @@ maxf = 1;       % frequency cutoff for output
 %% begin processing, if data sufficient
 pts = length(p);       % record length in data points
 
-if pts >= 2*wsecs & fs>=1,  % minimum length and quality for processing
+if pts >= 2.5*wsecs & fs>=1,  % minimum length and quality for processing
 
 
 %% break into windows (use 75 percent overlap)

@@ -20,12 +20,16 @@ clear all, close all
 %filename = 'OSanchor_RBR_17-26Jun2025'; lat = 46.72183; lon = -124.15081; 
 %filename = 'SBanchor_RBR_16-27Jun2025'; lat = 46.658626; lon = -123.992052; 
 %filename = 'MBanchor_RBR_16-27Jun2025'; lat = 46.690149; lon = -124.003540; 
-filename = 'EBanchor_RBR_16-27Jun2025'; lat = 46.693024; lon = -123.959714; 
+%filename = 'EBanchor_RBR_16-27Jun2025'; lat = 46.693024; lon = -123.959714; 
+%filename = '236526_20251028_0056_L2-1-SW_SepOct2025'; lat = 70.61506281; lon = -150.0043137; 
+%filename = '236527_20251028_0108_L3-3-SW_SepOct2025'; lat = 70.91876582; lon = -149.3814798;
+%filename = '200488_20251027_2317_L1-1-SW_SeptOCt2025'; lat = 70.56494329; lon = -150.5535118;
+%filename = '200070_20251027_2337_L3-1-SW_Sep2025'; lat = 70.56494329; lon = -150.5535118;
+%filename = '200071_20251028_0042_L3-1-SW_Oct2025'; lat = 70.56494329; lon = -150.5535118;
+filename = '239483_20251028_0121_L2-3-SW_SepOct2025'; lat = 70.87528309; lon = -149.9997883;
 
-
-
-t1 = datenum(2025,6,16); % start time
-t2 = datenum(2025,6,26); % end time
+t1 = datenum(2025,9,1); % start time
+t2 = datenum(2025,10,27); % end time
 
 plotspectra = false;
 
@@ -69,6 +73,8 @@ for bi = 1 : floor((totallength-startindex) ./ burstlength);
     pres = RSK.data.values( [startindex:(startindex+burstlength)] ,2) - atm;
     mooringdepth = nanmean(pres);
     waterdepth = mooringdepth; 
+
+    if waterdepth > mindepth
 
     % wave spectra and stats
     [ Hs, Tp, Hig, Tig, E, f ] = Pwaves(pres,fs); 
@@ -135,12 +141,22 @@ for bi = 1 : floor((totallength-startindex) ./ burstlength);
         currFrame = getframe(gcf);
         writeVideo(vidObj,currFrame);
     end
-    
+
+    end % close water depth if
 end
 
 if plotspectra
     close(vidObj);
 end
+
+
+%% QC for in water 
+
+
+RBR(find([RBR.depth]<mindepth)) = [];
+RBRcorr(find([RBRcorr.depth]<mindepth)) = [];
+RBRcorrextrap(find([RBRcorrextrap.depth]<mindepth)) = [];
+
 
 %% QC waves 
 
@@ -170,13 +186,6 @@ for bi=1:length(RBR),
     RBR(bi).peakwavedirT = NaN; % remove all wave directions (no vel data with which to make dir est)
     
 end
-
-%% QC for in water 
-
-
-RBR(find([RBR.depth]<mindepth)) = [];
-RBRcorr(find([RBRcorr.depth]<mindepth)) = [];
-RBRcorrextrap(find([RBRcorrextrap.depth]<mindepth)) = [];
 
 
 %% plot and save
