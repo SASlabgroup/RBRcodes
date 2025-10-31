@@ -1,4 +1,5 @@
-% Bulk Read RBR Solo and Duo
+% Bulk Read RBR Solo and Duo loggers on a T-chain
+% 
 % Michael James
 % 06/27/2024
 % 
